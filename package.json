@@ -5,8 +5,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --base-href /valentine-proposal/",
-    "build:prod": "ng build --configuration production --base-href /valentine-proposal/",
+    "build": "ng build --base-href /HappyBirthdayPratima/",
+    "build:prod": "ng build --configuration production --base-href /HappyBirthdayPratima/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

@@ -15,6 +15,56 @@
   /* Keep default cursor for usability */
 }
 
+/* Music Control Button */
+.music-control {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(255, 192, 203, 0.8);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10001;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.music-control:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 1);
+}
+
+.music-control.playing {
+  background: linear-gradient(135deg, rgba(255, 192, 203, 0.9) 0%, rgba(221, 160, 221, 0.9) 100%);
+  border-color: rgba(255, 255, 255, 0.8);
+  animation: musicPulse 2s ease-in-out infinite;
+}
+
+@keyframes musicPulse {
+  0%, 100% {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 5px 25px rgba(255, 192, 203, 0.8), 0 0 30px rgba(255, 192, 203, 0.5);
+  }
+}
+
+.music-icon {
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.music-control:hover .music-icon {
+  transform: scale(1.2);
+}
+
 /* Cursor Trail Effect - Fairy Flare - Optimized */
 .cursor-trail {
   position: fixed;

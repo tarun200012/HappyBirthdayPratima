@@ -162,11 +162,37 @@ Happy Birthday, my beautiful Rosogulla. I am so proud of you, and I'm going to m
     revealed: false
   }));
 
+  audioPlayer: HTMLAudioElement | null = null;
+  isMusicPlaying = false;
+
   ngOnInit() {
     // Start with landing page
     this.currentStep = 'landing';
     // Initialize cursor trail
     this.initCursorTrail();
+    // Initialize audio player
+    this.initAudio();
+  }
+
+  initAudio() {
+    // Create audio element
+    this.audioPlayer = new Audio('assets/music/birthday-song.mp3');
+    this.audioPlayer.loop = true;
+    this.audioPlayer.volume = 0.7; // Set volume to 70%
+    this.audioPlayer.preload = 'auto';
+    
+    // Handle audio events
+    this.audioPlayer.addEventListener('play', () => {
+      this.isMusicPlaying = true;
+    });
+    
+    this.audioPlayer.addEventListener('pause', () => {
+      this.isMusicPlaying = false;
+    });
+    
+    this.audioPlayer.addEventListener('ended', () => {
+      this.isMusicPlaying = false;
+    });
   }
 
   initCursorTrail() {
@@ -197,10 +223,31 @@ Happy Birthday, my beautiful Rosogulla. I am so proud of you, and I'm going to m
 
   openEnvelope() {
     this.envelopeOpened = true;
+    
+    // Play music when envelope is opened
+    if (this.audioPlayer) {
+      this.audioPlayer.play().catch(error => {
+        console.log('Audio play failed:', error);
+        // Some browsers may block autoplay, but user interaction should allow it
+      });
+    }
+    
     setTimeout(() => {
       this.showEnvelope = false;
       this.currentStep = 'intro';
     }, 1000);
+  }
+
+  toggleMusic() {
+    if (!this.audioPlayer) return;
+    
+    if (this.isMusicPlaying) {
+      this.audioPlayer.pause();
+    } else {
+      this.audioPlayer.play().catch(error => {
+        console.log('Audio play failed:', error);
+      });
+    }
   }
 
   startSurprise() {
@@ -263,6 +310,10 @@ Happy Birthday, my beautiful Rosogulla. I am so proud of you, and I'm going to m
   }
 
   ngOnDestroy() {
-    // Cleanup if needed
+    // Cleanup audio
+    if (this.audioPlayer) {
+      this.audioPlayer.pause();
+      this.audioPlayer = null;
+    }
   }
 }

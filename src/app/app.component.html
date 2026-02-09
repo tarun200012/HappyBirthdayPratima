@@ -20,6 +20,15 @@
     <div class="particle" *ngFor="let p of [1,2,3,4,5,6,7,8,9,10]"></div>
   </div>
 
+  <!-- Music Control Button -->
+  <button 
+    class="music-control" 
+    *ngIf="currentStep !== 'landing'"
+    (click)="toggleMusic()"
+    [class.playing]="isMusicPlaying">
+    <span class="music-icon">{{ isMusicPlaying ? '🔊' : '🔇' }}</span>
+  </button>
+
   <!-- Landing Page - Envelope -->
   <div *ngIf="currentStep === 'landing'" class="landing-page" [@fadeIn]>
     <div class="envelope-container" [class.opened]="envelopeOpened">
