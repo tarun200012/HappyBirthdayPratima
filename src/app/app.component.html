@@ -1,0 +1,151 @@
+<div class="app-container" [class]="currentStep">
+  <!-- Cursor Trail Effect - Fairy Flare -->
+  <div class="cursor-trail">
+    <div 
+      class="trail-sparkle" 
+      *ngFor="let point of cursorTrail; let i = index"
+      [style.left.px]="point.x"
+      [style.top.px]="point.y"
+      [style.opacity]="1 - (i / cursorTrail.length) * 0.8"
+      [style.transform]="'translate(-50%, -50%) scale(' + (1 - i * 0.05) + ')'">
+      ✨
+    </div>
+  </div>
+  
+  <!-- Custom Cursor -->
+  <div class="custom-cursor" [style.left.px]="mouseX" [style.top.px]="mouseY"></div>
+  
+  <!-- Floating particles background -->
+  <div class="particles">
+    <div class="particle" *ngFor="let p of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]"></div>
+  </div>
+
+  <!-- Landing Page - Envelope -->
+  <div *ngIf="currentStep === 'landing'" class="landing-page" [@fadeIn]>
+    <div class="envelope-container" [class.opened]="envelopeOpened">
+      <div class="envelope" (click)="openEnvelope()" [@scaleIn]>
+        <div class="envelope-front">
+          <div class="envelope-seal" [class.opened]="envelopeOpened">
+            <span class="heart-seal">💌</span>
+          </div>
+        </div>
+        <div class="envelope-back"></div>
+        <div class="letter" [class.revealed]="envelopeOpened">
+          <p class="letter-text">A little something for the birthday girl...</p>
+        </div>
+      </div>
+      <p class="click-hint" *ngIf="!envelopeOpened">Click the envelope to open</p>
+    </div>
+  </div>
+
+  <!-- Intro Page -->
+  <div *ngIf="currentStep === 'intro'" class="intro-page" [@slideUp]>
+    <div class="confetti-container">
+      <div class="confetti" *ngFor="let c of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]"></div>
+    </div>
+    <div class="intro-content">
+      <h1 class="birthday-title">🎉 Happy Birthday! 🎉</h1>
+      <p class="birthday-subtitle">My Beautiful Rosogulla</p>
+      <button class="start-button" (click)="startSurprise()">
+        <span>Click Me</span>
+        <span class="sparkle">✨</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Message Page with Typewriter -->
+  <div *ngIf="currentStep === 'message'" class="message-page" [@fadeIn]>
+    <div class="message-container">
+      <div class="message-content">
+        <div class="typewriter-text" [innerHTML]="typewriterText | lineBreaks"></div>
+        <div class="cursor" *ngIf="isTyping">|</div>
+      </div>
+      
+      <!-- Interactive Photo Reveals -->
+      <div class="photo-reveals">
+        <div 
+          class="photo-reveal-item" 
+          *ngFor="let photo of photos; let i = index"
+          [class.revealed]="photo.revealed"
+          (click)="revealPhoto(i)"
+          [@scaleIn]>
+          <div class="reveal-icon">📸</div>
+          <div class="photo-preview" *ngIf="photo.revealed">
+            <img [src]="photo.src" [alt]="'Photo ' + photo.id" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27200%27 height=%27200%27%3E%3Crect fill=%27%23f0f0f0%27 width=%27200%27 height=%27200%27/%3E%3Ctext fill=%27%23999%27 font-family=%27sans-serif%27 font-size=%2714%27 x=%2750%25%27 y=%2750%25%27 text-anchor=%27middle%27 dy=%27.3em%27%3EPhoto %3C/text%3E%3C/svg%3E'">
+          </div>
+        </div>
+      </div>
+
+      <button class="gallery-button" (click)="goToGallery()" *ngIf="!isTyping">
+        <span>View Our Memories</span>
+        <span class="arrow">→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Memories Gallery with Flip Cards -->
+  <div *ngIf="currentStep === 'gallery'" class="gallery-page" [@fadeIn]>
+    <div class="gallery-header">
+      <h2 class="gallery-title">Our Beautiful Memories</h2>
+      <p class="gallery-subtitle">Tap on any memory to see what I think about it 💕</p>
+    </div>
+    <div class="memories-grid">
+      <div 
+        class="memory-card-wrapper"
+        *ngFor="let memory of memories; let i = index"
+        [style.animation-delay.ms]="i * 150"
+        [@scaleIn]>
+        <div 
+          class="memory-card" 
+          (click)="flipMemory(memory)">
+          <div class="card-inner" [class.flipped]="memory.flipped">
+            <!-- Front of card -->
+            <div class="card-front">
+              <div class="memory-media">
+                <img 
+                  *ngIf="memory.type === 'image'"
+                  [src]="memory.src" 
+                  [alt]="'Memory ' + memory.id"
+                  onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27400%27 height=%27400%27%3E%3Crect fill=%27%23f0f0f0%27 width=%27400%27 height=%27400%27/%3E%3Ctext fill=%27%23999%27 font-family=%27sans-serif%27 font-size=%2718%27 x=%2750%25%27 y=%2750%25%27 text-anchor=%27middle%27 dy=%27.3em%27%3EMemory %3C/text%3E%3C/svg%3E'">
+                <video 
+                  *ngIf="memory.type === 'video'"
+                  [src]="memory.src"
+                  loop
+                  muted
+                  playsinline
+                  preload="metadata"
+                  (mouseenter)="playVideo($event)"
+                  (mouseleave)="pauseVideo($event)"
+                  (click)="$event.stopPropagation(); playVideo($event)"
+                  onerror="this.style.display='none'">
+                  Your browser does not support the video tag.
+                </video>
+                <div class="memory-overlay">
+                  <div class="tap-hint">
+                    <span class="tap-icon">👆</span>
+                    <span class="tap-text">Tap me</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Back of card with description -->
+            <div class="card-back">
+              <div class="memory-description">
+                <div class="description-icon">💭</div>
+                <p class="description-text">{{ memory.description }}</p>
+                <div class="flip-back-hint">
+                  <span>Tap again to flip back</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="gallery-footer">
+      <p class="footer-message">I love you, Gudda 💍🫶</p>
+      <p class="footer-signature">Your Dumb Guy, Always Yours</p>
+    </div>
+  </div>
+</div>
