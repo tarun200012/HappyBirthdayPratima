@@ -181,8 +181,8 @@ Happy Birthday, my beautiful Rosogulla. I am so proud of you, and I'm going to m
     const point = { x, y, id: this.trailId++, opacity: 1 };
     this.cursorTrail.push(point);
     
-    // Keep only last 15 points for performance
-    if (this.cursorTrail.length > 15) {
+    // Keep only last 10 points for better performance
+    if (this.cursorTrail.length > 10) {
       this.cursorTrail.shift();
     }
     
@@ -192,7 +192,7 @@ Happy Birthday, my beautiful Rosogulla. I am so proud of you, and I'm going to m
       if (index > -1) {
         this.cursorTrail.splice(index, 1);
       }
-    }, 800);
+    }, 600);
   }
 
   openEnvelope() {
